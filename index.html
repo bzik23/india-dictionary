@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
+<title>מילון הודי לטיול</title>
+<meta name="description" content="מילון עברית-הינדי עם שמע לכל מילה, לטיול בקרלה וגואה">
+<meta name="theme-color" content="#E8651A">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐘</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&family=Noto+Sans+Devanagari:wght@500;700&family=Noto+Sans+Malayalam:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFF8EE; --card:#FFFFFF; --ink:#2B1A10; --muted:#7A6555;
+  --saffron:#E8651A; --saffron-soft:#FFE7D3; --teal:#0F7C78; --teal-soft:#DDF3F1;
+  --pink:#D6336C; --line:#F0DFCC; --shadow:0 2px 10px rgba(120,60,10,.08);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+.chips,.grid,.card{min-width:0}
+body{overflow-x:hidden}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Rubik,system-ui,sans-serif;line-height:1.4}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px 60px}
+header{background:linear-gradient(135deg,#E8651A 0%,#D6336C 100%);color:#fff;padding:28px 16px 70px;text-align:center}
+header h1{margin:0;font-size:clamp(28px,6vw,44px);font-weight:800}
+header p{margin:8px auto 0;max-width:560px;opacity:.95;font-size:17px}
+.flag{font-size:1.1em}
+
+/* translator */
+.tr-box{background:var(--card);border-radius:22px;box-shadow:0 8px 30px rgba(120,60,10,.14);padding:20px;margin:-50px auto 22px;position:relative}
+.tr-box h2{margin:0 0 4px;font-size:21px}
+.tr-box .hint{margin:0 0 12px;color:var(--muted);font-size:14px}
+textarea{width:100%;min-height:78px;resize:vertical;border:2px solid var(--line);border-radius:14px;padding:12px 14px;font:inherit;font-size:19px;background:#FFFCF7;color:var(--ink)}
+textarea:focus,input:focus{outline:none;border-color:var(--saffron)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.btn{border:0;border-radius:999px;padding:12px 22px;font:inherit;font-weight:700;font-size:17px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;min-height:48px}
+.btn-main{background:var(--saffron);color:#fff}
+.btn-main:active{transform:scale(.97)}
+.btn-ghost{background:var(--saffron-soft);color:#8A3A0A}
+.btn[disabled]{opacity:.6}
+.tr-out{display:none;margin-top:16px;background:var(--teal-soft);border-radius:16px;padding:16px}
+.tr-out.show{display:block}
+.tr-hi{font-family:'Noto Sans Devanagari',sans-serif;font-size:26px;font-weight:700;direction:ltr;text-align:left;color:#0B4F4C}
+.tr-rom{direction:ltr;text-align:left;color:var(--teal);font-size:18px;margin-top:4px}
+.tr-err{color:var(--pink);font-weight:500}
+.pulse{animation:pulse 1s ease-in-out 3}
+@keyframes pulse{50%{transform:scale(1.08)}}
+
+/* tools */
+.tools{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0 8px}
+.search{width:100%;border:2px solid var(--line);border-radius:999px;padding:12px 18px;font:inherit;font-size:17px;background:#fff}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:2px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font:inherit;font-size:15px;cursor:pointer;color:var(--ink)}
+.chip.on{background:var(--teal);border-color:var(--teal);color:#fff}
+
+.sec-title{font-size:22px;margin:22px 0 10px;display:flex;align-items:center;gap:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr));gap:12px}
+.card{background:var(--card);border:2px solid transparent;border-radius:18px;padding:14px 14px 12px;box-shadow:var(--shadow);cursor:pointer;text-align:right;font:inherit;color:inherit;width:100%;display:flex;flex-direction:column;gap:4px;transition:transform .12s,border-color .12s}
+.card:active{transform:scale(.97)}
+.card.playing{border-color:var(--saffron)}
+.he{font-size:19px;font-weight:700;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.spk{flex:0 0 auto;width:36px;height:36px;border-radius:50%;background:var(--saffron-soft);display:grid;place-items:center;font-size:17px}
+.card.playing .spk{background:var(--saffron)}
+.say{overflow-wrap:anywhere;font-size:22px;font-weight:800;color:var(--saffron)}
+.native{font-family:'Noto Sans Devanagari','Noto Sans Malayalam',sans-serif;font-size:19px;color:var(--teal);direction:ltr;text-align:left}
+.lat{direction:ltr;text-align:left;color:var(--muted);font-size:14px}
+.empty{text-align:center;color:var(--muted);padding:30px}
+
+/* practice */
+.practice-bar{display:flex;justify-content:center;margin:18px 0 0}
+.overlay{position:fixed;inset:0;background:rgba(43,26,16,.55);display:none;align-items:center;justify-content:center;padding:16px;z-index:20}
+.overlay.show{display:flex}
+.flash{background:#fff;border-radius:24px;padding:26px 20px;width:100%;max-width:420px;text-align:center}
+.flash .q{font-size:30px;font-weight:800;margin:6px 0 18px}
+.flash .a{display:none}
+.flash .a.show{display:block}
+.flash .a .say{font-size:30px}
+.flash .a .native{text-align:center;font-size:24px}
+.flash .a .lat{text-align:center}
+.flash .row{justify-content:center;margin-top:20px}
+.flash small{color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:40px}
+</style>
+</head>
+<body>
+<header>
+  <h1>מילון הודי לטיול <span class="flag">🇮🇳</span></h1>
+  <p>לוחצים על מילה ושומעים איך אומרים אותה בהינדי 🔊<br>קרלה וגואה, אנחנו באים!</p>
+</header>
+
+<div class="wrap">
+  <section class="tr-box" aria-labelledby="trTitle">
+    <h2 id="trTitle">✍️ כתבו משפט ושמעו אותו בהינדי</h2>
+    <p class="hint">כותבים בעברית, לוחצים, והמשפט מתורגם ומוקרא בקול. צריך אינטרנט.</p>
+    <textarea id="trIn" maxlength="200" placeholder="למשל: איפה החוף הכי קרוב?"></textarea>
+    <div class="row">
+      <button class="btn btn-main" id="trGo">🔊 תרגם ושמע</button>
+      <button class="btn btn-ghost" id="trSlow" hidden>🐢 שוב, לאט</button>
+    </div>
+    <div class="tr-out" id="trOut" aria-live="polite"></div>
+  </section>
+
+  <div class="tools">
+    <input class="search" id="q" type="search" placeholder="🔎 חיפוש מילה (למשל: מים, תודה, איפה)" autocomplete="off">
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <div id="list"></div>
+
+  <div class="practice-bar"><button class="btn btn-main" id="pracBtn">🎯 בואו נתרגל!</button></div>
+
+  <footer>
+    <p>ההגייה בעברית היא בערך. הכי טוב: ללחוץ, להקשיב ולחקות 😊<br>
+    בגואה ובקרלה רוב האנשים מדברים גם אנגלית. בקרלה השפה המקומית היא מלאיאלאם (יש בונוס למטה).</p>
+  </footer>
+</div>
+
+<div class="overlay" id="ov" role="dialog" aria-modal="true" aria-label="תרגול">
+  <div class="flash">
+    <small>איך אומרים בהינדי?</small>
+    <div class="q" id="fq"></div>
+    <div class="a" id="fa"></div>
+    <div class="row">
+      <button class="btn btn-main" id="fShow">👀 תראו לי</button>
+      <button class="btn btn-ghost" id="fNext">הבא ⬅️</button>
+    </div>
+    <div class="row"><button class="btn btn-ghost" id="fClose">סגור ✖</button></div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+(function(){
+  const CATS = window.CATS, WORDS = window.WORDS;
+  const player = new Audio();
+  let playingEl = null;
+
+  function play(src, el){
+    player.pause();
+    if (playingEl) playingEl.classList.remove('playing');
+    playingEl = el || null;
+    if (el) el.classList.add('playing');
+    player.src = src;
+    player.playbackRate = 1;
+    return player.play().catch(()=>{});
+  }
+  player.addEventListener('ended', ()=>{ if (playingEl) playingEl.classList.remove('playing'); playingEl = null; });
+
+  const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  // ---------- list ----------
+  let cat = 'all';
+  const chips = document.getElementById('chips');
+  const list = document.getElementById('list');
+  const q = document.getElementById('q');
+
+  chips.innerHTML = `<button class="chip on" data-k="all">הכל</button>` +
+    CATS.map(c => `<button class="chip" data-k="${c.key}">${c.emoji} ${esc(c.name)}</button>`).join('');
+  chips.addEventListener('click', e => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    cat = b.dataset.k;
+    chips.querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x === b));
+    render();
+  });
+  q.addEventListener('input', render);
+
+  function cardHTML(w, i){
+    return `<button class="card" data-i="${i}">
+      <span class="he"><span>${esc(w.he)}</span><span class="spk" aria-hidden="true">🔊</span></span>
+      <span class="say">${esc(w.tr)}</span>
+      <span class="native" lang="${w.lang}">${esc(w.native)}</span>
+      <span class="lat">${esc(w.en)}</span>
+    </button>`;
+  }
+  function norm(s){ return s.replace(/[֑-ׇ]/g,'').toLowerCase(); }
+
+  function render(){
+    const term = norm(q.value.trim());
+    let html = '';
+    for (const c of CATS){
+      if (cat !== 'all' && cat !== c.key) continue;
+      const ws = WORDS.map((w,i)=>[w,i]).filter(([w]) => w.cat === c.key &&
+        (!term || norm(w.he).includes(term) || norm(w.tr).includes(term) || w.en.toLowerCase().includes(term) || w.native.includes(term)));
+      if (!ws.length) continue;
+      html += `<h2 class="sec-title">${c.emoji} ${esc(c.name)}</h2><div class="grid">` + ws.map(([w,i]) => cardHTML(w,i)).join('') + `</div>`;
+    }
+    list.innerHTML = html || `<p class="empty">לא מצאנו 🙈 נסו לכתוב את המשפט בתיבה למעלה</p>`;
+  }
+  list.addEventListener('click', e => {
+    const b = e.target.closest('.card'); if (!b) return;
+    play(WORDS[+b.dataset.i].audio, b);
+  });
+  render();
+
+  // ---------- free sentence translator ----------
+  const trIn = document.getElementById('trIn'), trGo = document.getElementById('trGo'),
+        trOut = document.getElementById('trOut'), trSlow = document.getElementById('trSlow');
+  let lastHi = '';
+
+  async function translate(text){
+    const u = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=hi&dt=t&dt=rm&q=' + encodeURIComponent(text);
+    try{
+      const r = await fetch(u); if (!r.ok) throw 0;
+      const d = await r.json();
+      const parts = d[0] || [];
+      const hi = parts.filter(p => p[0]).map(p => p[0]).join('');
+      const romRow = parts.find(p => !p[0] && p[2]);
+      return { hi, rom: romRow ? romRow[2] : '' };
+    }catch(_){
+      const r = await fetch('https://api.mymemory.translated.net/get?langpair=he|hi&q=' + encodeURIComponent(text));
+      const d = await r.json();
+      return { hi: d.responseData.translatedText, rom: '' };
+    }
+  }
+
+  function ttsUrl(t){ return 'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=hi&q=' + encodeURIComponent(t.slice(0,200)); }
+
+  function speakHindi(text, slow){
+    // 1) Google voice (works on every phone) 2) fallback: the phone's own Hindi voice
+    player.pause();
+    player.src = ttsUrl(text);
+    player.playbackRate = slow ? 0.75 : 1;
+    return player.play().catch(() => {
+      if (!('speechSynthesis' in window)) { trSlow.classList.add('pulse'); return; }
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'hi-IN'; u.rate = slow ? 0.6 : 0.85;
+      const v = speechSynthesis.getVoices().find(v => /^hi/i.test(v.lang));
+      if (v) u.voice = v;
+      speechSynthesis.cancel(); speechSynthesis.speak(u);
+    });
+  }
+
+  async function go(){
+    const text = trIn.value.trim();
+    if (!text) { trIn.focus(); return; }
+    // unlock audio on iPhone inside the tap itself
+    player.src = WORDS[0].audio; player.muted = true; player.play().catch(()=>{}).finally(()=>{ player.pause(); player.muted = false; });
+    trGo.disabled = true; trGo.textContent = '⏳ מתרגם...';
+    try{
+      const {hi, rom} = await translate(text);
+      lastHi = hi;
+      trOut.innerHTML = `<div class="tr-hi" lang="hi">${esc(hi)}</div>` + (rom ? `<div class="tr-rom">${esc(rom)}</div>` : '');
+      trOut.classList.add('show');
+      trSlow.hidden = false;
+      trSlow.textContent = '🐢 שוב, לאט';
+      speakHindi(hi, false);
+    }catch(e){
+      trOut.innerHTML = `<p class="tr-err">אופס, אין חיבור לאינטרנט או שהתרגום לא עבד. נסו שוב 🙏</p>`;
+      trOut.classList.add('show');
+    }finally{
+      trGo.disabled = false; trGo.textContent = '🔊 תרגם ושמע';
+    }
+  }
+  trGo.addEventListener('click', go);
+  trIn.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); go(); } });
+  trSlow.addEventListener('click', () => { trSlow.classList.remove('pulse'); if (lastHi) speakHindi(lastHi, true); });
+  if ('speechSynthesis' in window) speechSynthesis.getVoices();
+
+  // ---------- practice ----------
+  const ov = document.getElementById('ov'), fq = document.getElementById('fq'), fa = document.getElementById('fa');
+  const pool = WORDS.map((w,i)=>i).filter(i => WORDS[i].lang === 'hi');
+  let cur = 0;
+  function next(){
+    cur = pool[Math.floor(Math.random()*pool.length)];
+    const w = WORDS[cur];
+    fq.textContent = w.he;
+    fa.innerHTML = `<div class="say">${esc(w.tr)}</div><div class="native" lang="hi">${esc(w.native)}</div><div class="lat">${esc(w.en)}</div>`;
+    fa.classList.remove('show');
+  }
+  document.getElementById('pracBtn').onclick = () => { next(); ov.classList.add('show'); };
+  document.getElementById('fShow').onclick = () => { fa.classList.add('show'); play(WORDS[cur].audio); };
+  document.getElementById('fNext').onclick = next;
+  document.getElementById('fClose').onclick = () => ov.classList.remove('show');
+  ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('show'); });
+
+  // ---------- offline (works in India without signal, after first visit) ----------
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+})();
+</script>
+</body>
+</html>
